@@ -63,7 +63,7 @@ class build_step(_step[StepKey]):  # pylint: disable=invalid-name
     def func_name(self) -> Product@ConcreteBuilder:\n
         ...
 
-    def func_name(self, state: StateType@ConcreteBuilder) -> Product@ConcreteBuilder:\n
+    def func_name(self, state: State@ConcreteBuilder) -> Product@ConcreteBuilder:\n
         ...
     """
 
@@ -93,13 +93,13 @@ class process_step(_step[StepKey]):  # pylint: disable=invalid-name
 
     def func_name(self,\n
                   associated_build_step_result: T@ConcreteBuilder,\n
-                  acted_state: StateType@ConcreteBuilder) -> None:\n
+                  acted_state: State@ConcreteBuilder) -> None:\n
         ...
 
     def func_name(self,\n
                   associated_build_step_result: T@ConcreteBuilder,\n
-                  acted_state: StateType@ConcreteBuilder,\n
-                  step_key: StepKeyType@ConcreteBuilder) -> None:\n
+                  acted_state: State@ConcreteBuilder,\n
+                  step_key: StepKey@ConcreteBuilder) -> None:\n
         ...
 
     """
