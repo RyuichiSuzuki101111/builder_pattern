@@ -94,3 +94,26 @@ class Builder(Generic[FinalProduct, IntermediateProduct, State, StepKey], metacl
     to change the order of process steps or exclude certain steps from the building process.
     """
 
+    def filter_and_sort_process_step_keys(self,
+                                          process_step_keys: list[StepKey]) -> list[StepKey]:
+        """
+        Filter and sort the process_step_keys based on custom criteria.
+
+        This method is not mandatory to override, but it is recommended to do so
+        in order to apply custom filtering and sorting logic to the process_step_keys.
+
+        By default, this method returns the received process_step_keys without any modification.
+
+        Args:
+            process_step_keys (list[StepKey]): List of step keys for filtering and sorting.
+
+        Returns:
+            list[StepKey]: The filtered and sorted list of process step keys.
+        """
+        return process_step_keys
+
+    def _unfiltered_process_step_keys(self) -> list[StepKey]:
+        return list(type(self).process_executor_factories.keys())
+
+    def _filtered_and_sorted_process_step_keys(self) -> list[StepKey]:
+        return self.filter_and_sort_process_step_keys(self._unfiltered_process_step_keys())
