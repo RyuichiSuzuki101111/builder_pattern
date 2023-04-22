@@ -53,3 +53,9 @@ class build_step(_step):
 
         return wrapper
 
+
+class process_step(_step):
+    """
+    Descriptor class for process steps.
+    Inherits from the _step class without changing its behavior.
+    """
