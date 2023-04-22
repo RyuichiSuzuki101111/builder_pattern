@@ -35,3 +35,21 @@ class _step:
 
         return wrapper
 
+
+class build_step(_step):
+    """
+    Descriptor class for build steps.
+    Inherits from the _step class and modifies the __get__ method to return
+    a callable that doesn't take any arguments.
+    """
+
+    def __get__(self, instance: Any, owner: Any) -> Any:
+
+        if instance is None:
+            return self
+
+        def wrapper() -> Any:
+            return self._func(instance)
+
+        return wrapper
+
