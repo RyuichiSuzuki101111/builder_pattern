@@ -52,7 +52,7 @@ class _step(Generic[StepKey]):
         raise NotImplementedError()
 
 
-class build_step(_step[StepKey]):
+class build_step(_step[StepKey]):  # pylint: disable=invalid-name
     """
     Descriptor class for build steps.
     Inherits from the _step class and modifies the __get__ method to return
@@ -84,7 +84,7 @@ class build_step(_step[StepKey]):
         return executor
 
 
-class process_step(_step[StepKey]):
+class process_step(_step[StepKey]):  # pylint: disable=invalid-name
     """
     Descriptor class for process steps.
     Inherits from the _step class without changing its behavior.
