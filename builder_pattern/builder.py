@@ -112,6 +112,21 @@ class Builder(Generic[FinalProduct, IntermediateProduct, State, StepKey], metacl
         """
         return process_step_keys
 
+    def create_initial_state(self) -> State:
+        """
+        Create the initial state for the building process.
+        Subclasses should override this method to return a custom initial state.
+        """
+        raise NotImplementedError()
+
+    def evaluate_final_state(self, state: State) -> FinalProduct:
+        """
+        Evaluate the final state and return the built object.
+        Subclasses should override this method to return a
+        custom built object based on the final state.
+        """
+        raise NotImplementedError()
+
     def _unfiltered_process_step_keys(self) -> list[StepKey]:
         return list(type(self).process_executor_factories.keys())
 
