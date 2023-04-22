@@ -31,8 +31,7 @@ State = TypeVar('State')
 ExecutorFactory = Callable[['Builder[Any, Any, Any, Any]'], Callable[..., Any]]
 
 
-# pylint: disable=invalid-name
-class builder_meta(type):
+class builder_meta(type):  # pylint: disable=invalid-name
     """
     The builder_meta metaclass is responsible for initializing build_executor_creators and
     process_executor_creators dictionaries and updating them with the build_step and process_step
