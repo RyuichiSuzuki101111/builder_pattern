@@ -94,6 +94,34 @@ class Builder(Generic[FinalProduct, IntermediateProduct, State, StepKey], metacl
     to change the order of process steps or exclude certain steps from the building process.
     """
 
+    def build(self) -> FinalProduct:
+        """
+        This function builds the final product of this class.
+        The processes in this function consist of the following steps:
+
+        - Initialize the state for build process using the overridden create_initial_state method.
+        - Iterate through build and process steps. A pair of build and process steps
+          consists of freely defined operationsassociated with a step key.
+          Build steps create intermediate products, while process steps
+          modify the state based on the intermediate products.
+        - Evaluate the resulting state and generate the final product using
+          the overridden evaluate_final_state method.
+        """
+        state = self.create_initial_state()
+
+        build_executor_factories = type(self).build_executor_factories
+        process_executor_factories = type(self).process_executor_factories
+
+        for step_key in self._filtered_and_sorted_process_step_keys():
+
+            build_executor = build_executor_factories[step_key](self)
+            build_step_result = build_executor(step_key)
+
+            process_executor = process_executor_factories[step_key](self)
+            process_executor(build_step_result, state, step_key)
+
+        return self.evaluate_final_state(state)
+
     def filter_and_sort_process_step_keys(self,
                                           process_step_keys: list[StepKey]) -> list[StepKey]:
         """
