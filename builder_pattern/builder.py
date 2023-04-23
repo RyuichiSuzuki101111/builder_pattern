@@ -33,8 +33,8 @@ ExecutorFactory = Callable[['Builder[Any, Any, Any, Any]'], Callable[..., Any]]
 
 class builder_meta(type):  # pylint: disable=invalid-name
     """
-    The builder_meta metaclass is responsible for initializing build_executor_creators and
-    process_executor_creators dictionaries and updating them with the build_step and process_step
+    The builder_meta metaclass is responsible for initializing build_executor_factories and
+    process_executor_factories dictionaries and updating them with the build_step and process_step
     attributes found in the Builder subclass.
     """
 
@@ -55,23 +55,23 @@ class builder_meta(type):  # pylint: disable=invalid-name
 
     def update_map(cls, step: build_step[Any] | process_step[Any]) -> None:
         """
-        Update the build_executor_creators or process_executor_creators dictionary
+        Update the build_executor_factories or process_executor_ dictionary
         with the given step.
         """
 
         match step:
             case build_step():
-                factories = cls.build_executor_factories
+                executor_factories = cls.build_executor_factories
             case process_step():
-                factories = cls.process_executor_factories
+                executor_factories = cls.process_executor_factories
 
         for step_key in step.step_keys:
 
-            if step_key in factories:
+            if step_key in executor_factories:
                 raise ValueError(f'Step key "{step_key}" is already in use by another step. '
                                  'Please use a unique step key for each step.')
 
-            factories[step_key] = step.executor_factory
+            executor_factories[step_key] = step.executor_factory
 
 
 class Builder(Generic[FinalProduct, IntermediateProduct, State, StepKey], metaclass=builder_meta):
