@@ -60,11 +60,15 @@ class build_step(_step[StepKey]):  # pylint: disable=invalid-name,too-few-public
 
     The wrapped function should have either of the following signature:
 
-    def func_name(self) -> IntermediateProduct@ConcreteBuilder:\n
+    def func_name(self) -> IntermediateProduct:\n
         ...
 
-    def func_name(self, step_key: StepKey@ConcreteBuilder) -> IntermediateProduct@ConcreteBuilder:\n
+    def func_name(self, step_key: StepKey) -> IntermediateProduct:\n
         ...
+
+    All the type variables in these signatures are associated with
+    a concrete subclass of Builder, where this descriptor is used.
+
     """
 
     def executor_factory(self, builder: Any):
@@ -92,15 +96,18 @@ class process_step(_step[StepKey]):  # pylint: disable=invalid-name,too-few-publ
     The wrapped function should have either of the following signature:
 
     def func_name(self,\n
-                  intermediate_product: IntermediateProduct@ConcreteBuilder,\n
-                  state: State@ConcreteBuilder) -> State@ConcreteBuilder:\n
+                  intermediate_product: IntermediateProduct,\n
+                  state: State) -> State:\n
         ...
 
     def func_name(self,\n
-                  intermediate_product: IntermediateProduct@ConcreteBuilder,\n
-                  state: State@ConcreteBuilder,\n
-                  step_key: StepKey@ConcreteBuilder) -> State@ConcreteBuilder:\n
+                  intermediate_product: IntermediateProduct,\n
+                  state: State,\n
+                  step_key: StepKey) -> State:\n
         ...
+
+    All the type variables in these signatures are associated with
+    a concrete subclass of Builder, where this descriptor is used.
 
     """
 
