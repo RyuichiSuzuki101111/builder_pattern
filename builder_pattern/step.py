@@ -60,10 +60,10 @@ class build_step(_step[StepKey]):  # pylint: disable=invalid-name,too-few-public
 
     The wrapped function should have either of the following signature:
 
-    def func_name(self) -> Product@ConcreteBuilder:\n
+    def func_name(self) -> IntermediateProduct@ConcreteBuilder:\n
         ...
 
-    def func_name(self, step_key: StepKey@ConcreteBuilder) -> Product@ConcreteBuilder:\n
+    def func_name(self, step_key: StepKey@ConcreteBuilder) -> IntermediateProduct@ConcreteBuilder:\n
         ...
     """
 
