@@ -42,8 +42,8 @@ class builder_meta(type):  # pylint: disable=invalid-name
                  __name: str,
                  __bases: tuple[type, ...],
                  __namespace: dict[str, Any]):
-        cls.build_executor_factories: dict[Any, ExecutorFactory]
-        cls.process_executor_factories: dict[Any, ExecutorFactory]
+        cls.build_executor_factories: dict[Any, ExecutorFactory] = {}
+        cls.process_executor_factories: dict[Any, ExecutorFactory] = {}
 
         for attr_name in dir(cls):
 
@@ -63,7 +63,7 @@ class builder_meta(type):  # pylint: disable=invalid-name
             case build_step():
                 factories = cls.build_executor_factories
             case process_step():
-                factories = cls.build_executor_factories
+                factories = cls.process_executor_factories
 
         for step_key in step.step_keys:
 
@@ -117,7 +117,7 @@ class Builder(Generic[FinalProduct, IntermediateProduct, State, StepKey], metacl
             build_step_result = build_executor(step_key)
 
             process_executor = process_executor_factories[step_key](self)
-            process_executor(build_step_result, state, step_key)
+            state = process_executor(build_step_result, state, step_key)
 
         return self.evaluate_final_state(state)
 
