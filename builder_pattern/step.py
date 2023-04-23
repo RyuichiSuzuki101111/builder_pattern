@@ -52,7 +52,7 @@ class _step(Generic[StepKey]):
         raise NotImplementedError()
 
 
-class build_step(_step[StepKey]):  # pylint: disable=invalid-name
+class build_step(_step[StepKey]):  # pylint: disable=invalid-name,too-few-public-methods
     """
     Descriptor class for build steps.
     Inherits from the _step class and modifies the __get__ method to return
@@ -63,7 +63,7 @@ class build_step(_step[StepKey]):  # pylint: disable=invalid-name
     def func_name(self) -> Product@ConcreteBuilder:\n
         ...
 
-    def func_name(self, state: State@ConcreteBuilder) -> Product@ConcreteBuilder:\n
+    def func_name(self, step_key: StepKey@ConcreteBuilder) -> Product@ConcreteBuilder:\n
         ...
     """
 
@@ -84,7 +84,7 @@ class build_step(_step[StepKey]):  # pylint: disable=invalid-name
         return executor
 
 
-class process_step(_step[StepKey]):  # pylint: disable=invalid-name
+class process_step(_step[StepKey]):  # pylint: disable=invalid-name,too-few-public-methods
     """
     Descriptor class for process steps.
     Inherits from the _step class without changing its behavior.
@@ -92,35 +92,35 @@ class process_step(_step[StepKey]):  # pylint: disable=invalid-name
     The wrapped function should have either of the following signature:
 
     def func_name(self,\n
-                  associated_build_step_result: T@ConcreteBuilder,\n
-                  acted_state: State@ConcreteBuilder) -> None:\n
+                  intermediate_product: IntermediateProduct@ConcreteBuilder,\n
+                  state: State@ConcreteBuilder) -> State@ConcreteBuilder:\n
         ...
 
     def func_name(self,\n
-                  associated_build_step_result: T@ConcreteBuilder,\n
-                  acted_state: State@ConcreteBuilder,\n
-                  step_key: StepKey@ConcreteBuilder) -> None:\n
+                  intermediate_product: IntermediateProduct@ConcreteBuilder,\n
+                  state: State@ConcreteBuilder,\n
+                  step_key: StepKey@ConcreteBuilder) -> State@ConcreteBuilder:\n
         ...
 
     """
 
     def executor_factory(self, builder: Any):
 
-        def executor(associated_build_step_result: Any,
-                     acted_state: Any,
+        def executor(intermediate_product: Any,
+                     state: Any,
                      step_key: StepKey) -> Any:
 
             sig = inspect.signature(self.func)
 
             if len(sig.parameters) == 3:
                 return self.func(builder,
-                                 associated_build_step_result,
-                                 acted_state)
+                                 intermediate_product,
+                                 state)
 
             if len(sig.parameters) == 4:
                 return self.func(builder,
-                                 associated_build_step_result,
-                                 acted_state,
+                                 intermediate_product,
+                                 state,
                                  step_key)
 
             raise ValueError("Unexpected number of parameters in the function signature.")
