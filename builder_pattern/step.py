@@ -16,9 +16,8 @@ class _step(Generic[StepKey]):
     Base class for custom descriptor classes that wrap functions with a step_key.
     """
 
-    def __init__(self, *step_key: StepKey):
-        self.step_keys: list[StepKey] = list(step_key)
-        self.func: Callable[..., Any]
+    step_keys: list[StepKey]
+    func: Callable[..., Any]
 
     def __call__(self, func: Callable[..., Any]) -> Self:
         """
@@ -71,6 +70,9 @@ class build_step(_step[StepKey]):  # pylint: disable=invalid-name,too-few-public
 
     """
 
+    def __init__(self, *step_key: StepKey):
+        self.step_keys: list[StepKey] = list(step_key)
+
     def executor_factory(self, builder: Any):
 
         def executor(step_key: StepKey) -> Any:
@@ -109,7 +111,19 @@ class process_step(_step[StepKey]):  # pylint: disable=invalid-name,too-few-publ
     All the type variables in these signatures are associated with
     a concrete subclass of Builder, where this descriptor is used.
 
+    The 'default' attribute can be set to True for a single process step in a Builder subclass.
+    This will make the process step the default process step for all build steps that do not have
+    a specific process step defined.
+
+    Args:
+        *step_keys (StepKey): One or more step keys associated with this process step.
+        default (bool): Optional, whether this process step should be used as the default
+                        process step for all build steps. Defaults to False.
     """
+
+    def __init__(self, *step_keys: StepKey, default: bool = False):
+        self.step_keys = list(step_keys)
+        self.default: bool = default
 
     def executor_factory(self, builder: Any):
 
