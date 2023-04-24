@@ -55,8 +55,8 @@ class builder_meta(type):  # pylint: disable=invalid-name
 
     def update_map(cls, step: build_step[Any] | process_step[Any]) -> None:
         """
-        Update the build_executor_factories or process_executor_ dictionary
-        with the given step.
+        Update the build_executor_factories or process_executor_factories
+        dictionary with the given step.
         """
 
         match step:
