@@ -45,13 +45,27 @@ class builder_meta(type):  # pylint: disable=invalid-name
         cls.build_executor_factories: dict[Any, ExecutorFactory] = {}
         cls.process_executor_factories: dict[Any, ExecutorFactory] = {}
 
+        default_process_executor_factory: Any = None
+
         for attr_name in dir(cls):
-
             attr = getattr(cls, attr_name)
+            if isinstance(attr, process_step):
+                if attr.default:
+                    if default_process_executor_factory is not None:
+                        raise ValueError('A subclass of Builder is allowed '
+                                         'to have only one default process step.')
+                    default_process_executor_factory = attr.executor_factory
 
+        for attr_name in dir(cls):
+            attr = getattr(cls, attr_name)
             if isinstance(attr, (build_step, process_step)):
                 # pylint: disable=no-value-for-parameter
                 cls.update_map(cast(Any, attr))
+
+        if default_process_executor_factory is not None:
+            for step_key in cls.build_executor_factories:
+                cls.process_executor_factories.setdefault(
+                    step_key, default_process_executor_factory)
 
     def update_map(cls, step: build_step[Any] | process_step[Any]) -> None:
         """
