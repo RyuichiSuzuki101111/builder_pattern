@@ -114,10 +114,10 @@ class Builder(Generic[FinalProduct, IntermediateProduct, State, StepKey], metacl
         for step_key in self._filtered_and_sorted_process_step_keys():
 
             build_executor = build_executor_factories[step_key](self)
-            build_step_result = build_executor(step_key)
+            intermediate_product = build_executor(step_key)
 
             process_executor = process_executor_factories[step_key](self)
-            state = process_executor(build_step_result, state, step_key)
+            state = process_executor(intermediate_product, state, step_key)
 
         return self.evaluate_final_state(state)
 
