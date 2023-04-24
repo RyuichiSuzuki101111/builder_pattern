@@ -100,7 +100,7 @@ class Builder(Generic[FinalProduct, IntermediateProduct, State, StepKey], metacl
 
         - Initialize the state for build process using the overridden create_initial_state method.
         - Iterate through build and process steps. A pair of build and process steps
-          consists of freely defined operationsassociated with a step key.
+          consists of freely defined operations associated with a step key.
           Build steps create intermediate products, while process steps
           modify the state based on the intermediate products.
         - Evaluate the resulting state and generate the final product using
