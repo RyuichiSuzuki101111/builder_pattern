@@ -17,8 +17,8 @@ Subclasses of Builder should override the following methods:
 Optionally, subclasses can also override the filter_and_sort_process_step_keys method
 to change the order of process steps or exclude certain steps from the building process.
 
-The builder_meta metaclass is responsible for initializing build_executor_creators and
-process_executor_creators dictionaries and updating them with the build_step and process_step
+The builder_meta metaclass is responsible for initializing build_executor_factories and
+process_executor_factories dictionaries and updating them with the build_step and process_step
 attributes found in the Builder subclass.
 """
 
